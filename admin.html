@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Staff page, Ubay-Ubay</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="admin.css?v=5">
+  <script src="script.js?v=29" defer></script>
+  <script src="admin.js?v=7" defer></script>
+</head>
+<body class="staff-page">
+
+<header class="staff-bar">
+  <a class="staff-brand" href="index.html" aria-label="Ubay-Ubay website">
+    ubay-ubay <span>staff</span>
+  </a>
+  <div class="staff-top-user" id="staff-top-user" hidden>
+    <span class="staff-user">Logged in as <strong id="staff-shown"></strong></span>
+    <button class="button button-ghost button-small" type="button" id="refresh-button">Refresh</button>
+    <button class="button button-ghost button-small" type="button" id="logout-button">Log out</button>
+  </div>
+</header>
+
+<main class="staff-main">
+
+  <!-- Log in -->
+  <section class="login-box" id="login-box" hidden aria-labelledby="login-title">
+    <h2 id="login-title">Staff login</h2>
+    <p class="small">For Ubay-Ubay staff. Artists don't need to log in.</p>
+    <form class="form" id="login-form" novalidate>
+      <div class="field">
+        <label for="staff-name">Your name</label>
+        <input id="staff-name" type="text" autocomplete="name" maxlength="60" placeholder="Name" required>
+      </div>
+      <div class="field">
+        <label for="staff-password">Staff password</label>
+        <input id="staff-password" type="password" autocomplete="current-password" placeholder="Password" required>
+      </div>
+      <button class="button button-primary" type="submit" id="login-button">Log in</button>
+      <p class="small form-status" id="login-status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="small" style="margin-top: 1rem;"><a href="#" id="show-setup" class="text-link">First time? Create the first admin account</a></p>
+    <p class="small staff-login-back" style="margin-top: 1.25rem;"><a href="index.html" style="color: var(--navy-muted); text-decoration: none; font-weight: 600; font-size: 0.85rem;">← Back to website</a></p>
+  </section>
+
+  <!-- First-time setup -->
+  <section class="login-box" id="setup-box" hidden aria-labelledby="setup-title">
+    <h2 id="setup-title">First-time setup</h2>
+    <p class="small">Create the first admin account. You need the setup code.</p>
+    <form class="form" id="setup-form" novalidate>
+      <div class="field"><label for="setup-name">Your name</label>
+        <input id="setup-name" type="text" maxlength="60" placeholder="Name" required></div>
+      <div class="field"><label for="setup-password">Password</label>
+        <input id="setup-password" type="password" autocomplete="new-password" placeholder="8+ characters" required></div>
+      <div class="field"><label for="setup-password2">Repeat password</label>
+        <input id="setup-password2" type="password" autocomplete="new-password" required></div>
+      <div class="field"><label for="setup-code">Setup code</label>
+        <input id="setup-code" type="password" autocomplete="off" required></div>
+      <button class="button button-primary" type="submit" id="setup-button">Create account</button>
+      <p class="small form-status" id="setup-status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="small" style="margin-top: 1.25rem;"><a href="#" id="setup-back" class="text-link">← Back to login</a></p>
+  </section>
+
+  <!-- Dashboard -->
+  <div id="admin-app" hidden>
+    <h1 class="staff-title" id="page-title">Sign-ups</h1>
+
+    <div class="tabs" role="tablist">
+      <button class="tab is-active" type="button" role="tab" id="tab-signups" aria-selected="true">Sign-ups</button>
+      <button class="tab" type="button" role="tab" id="tab-staff" aria-selected="false" hidden>Staff accounts</button>
+    </div>
+
+    <p class="small form-status admin-status" id="admin-status" role="status" aria-live="polite"></p>
+
+    <div id="panel-signups">
+
+    <!-- Stat Tiles -->
+    <div class="stat-tiles" role="group" aria-label="Show">
+      <button class="stat-tile" type="button" data-filter="needs" aria-pressed="true">
+        <span class="stat-label">Needs a reply</span>
+        <span class="stat-count" id="count-needs">0</span>
+        <span class="stat-note" id="note-needs">All caught up</span>
+      </button>
+      <button class="stat-tile" type="button" data-filter="Accepted" aria-pressed="false">
+        <span class="stat-label">Accepted</span>
+        <span class="stat-count" id="count-accepted">0</span>
+        <span class="stat-note">In the program</span>
+      </button>
+      <button class="stat-tile" type="button" data-filter="Declined" aria-pressed="false">
+        <span class="stat-label">Declined</span>
+        <span class="stat-count" id="count-declined">0</span>
+        <span class="stat-note">Told "not this time"</span>
+      </button>
+      <button class="stat-tile" type="button" data-filter="uploads" aria-pressed="false">
+        <span class="stat-label">Uploaded this month</span>
+        <span class="stat-count" id="count-uploads">0</span>
+        <span class="stat-note" id="note-uploads">Artists</span>
+      </button>
+    </div>
+
+    <!-- Filters Container -->
+    <div class="filter-card-wrapper">
+      <form class="staff-filters" id="staff-filters" role="search" aria-label="Filter sign-ups">
+        <div class="filter-bar">
+          <input type="search" id="f-q" name="q" placeholder="Search name, artist name, or email..." autocomplete="off">
+        </div>
+        <details class="filter-more">
+          <summary>More filters</summary>
+          <div class="filter-grid">
+            <div class="field">
+              <label for="f-status">Status</label>
+              <select id="f-status" name="status">
+                <option value="all">All</option>
+                <option value="New">New (not decided)</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Declined">Declined</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-replied">Replied</label>
+              <select id="f-replied" name="replied">
+                <option value="all">All</option>
+                <option value="no">Not replied yet</option>
+                <option value="yes">Replied</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-uploads">Uploads</label>
+              <select id="f-uploads" name="uploads">
+                <option value="all">All</option>
+                <option value="month">Uploaded this month</option>
+                <option value="any">Uploaded any time</option>
+                <option value="none">No uploads yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-signed">Signed</label>
+              <select id="f-signed" name="signed">
+                <option value="any">Any time</option>
+                <option value="week">Last 7 days</option>
+                <option value="month">This month</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-sort">Sort</label>
+              <select id="f-sort" name="sort">
+                <option value="oldest">Longest wait</option>
+                <option value="newest">Newest</option>
+                <option value="name">A to Z</option>
+              </select>
+            </div>
+          </div>
+        </details>
+      </form>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="list-bar">
+      <p id="staff-showing" aria-live="polite">Showing 0 of 0</p>
+      <div class="list-bar-actions">
+        <label class="check">
+          <input type="checkbox" id="f-hide-test" name="hideTest"> Hide test sign-ups
+        </label>
+        <button class="button button-ghost button-small" type="button" id="clear-filters">Clear filters</button>
+        <button class="button button-secondary button-small" type="button" id="copy-emails">Copy emails</button>
+      </div>
+    </div>
+
+    <!-- Table Container Card -->
+    <div class="staff-list" id="staff-list">
+      <!-- Generated dynamically by admin.js -->
+    </div>
+    </div><!-- /panel-signups -->
+
+    <div id="panel-staff" hidden>
+      <div class="filter-card-wrapper">
+        <h2 class="panel-title">Add a staff account</h2>
+        <form id="register-form" novalidate>
+          <div class="filter-grid" style="border-top:0;margin-top:0;padding-top:0">
+            <div class="field"><label for="new-name">Name</label>
+              <input id="new-name" type="text" maxlength="60" required></div>
+            <div class="field"><label for="new-password">Temporary password</label>
+              <input id="new-password" type="password" autocomplete="new-password" placeholder="8+ characters" required></div>
+            <div class="field"><label for="new-role">Role</label>
+              <select id="new-role"><option value="staff">Staff</option><option value="admin">Admin</option></select></div>
+          </div>
+          <p style="margin-top:1rem"><button class="button button-primary" type="submit" id="register-button">Add account</button></p>
+          <p class="small form-status" id="register-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <div class="staff-list" id="staff-accounts"></div>
+      <p style="margin-top:1rem"><button class="button button-ghost button-small" type="button" id="change-password">Change my password</button></p>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>
